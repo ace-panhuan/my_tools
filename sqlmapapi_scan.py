@@ -2,6 +2,7 @@ import time
 import requests
 import json
 
+
 class SqlScan(object):
     """
     sqlmapapi交互类
@@ -19,14 +20,12 @@ class SqlScan(object):
         self.start_time = time.time()
         self.headers = {'Content-Type': 'application/json'}
 
-
     def task_new(self):
         self.taskid = json.loads(
             requests.get(self.server + 'task/new').text)['taskid']
         if len(self.taskid) > 0:
             return True
         return False
-
 
     def task_delete(self):
         kills = requests.get(self.server + 'task/' + self.taskid + '/delete').text
@@ -35,7 +34,6 @@ class SqlScan(object):
             return True
         else:
             return False
-
 
     def get_payload(self):
         if self.data:
@@ -56,8 +54,6 @@ class SqlScan(object):
         return payload
 
     def scan_start(self,payload):
-
-        #payload = {'url': self.target}
         url = self.server + 'scan/' + self.taskid + '/start'
         t = json.loads(
             requests.post(url, data=json.dumps(payload), headers=self.headers).text)
@@ -86,7 +82,6 @@ class SqlScan(object):
                 f.write(self.data + '\n')
                 f.write('========================pyton sqlmapapi by ace ======================' + '\n')
 
-
     def option_set(self):
         headers = {'Content-Type': 'application/json'}
         option = {"options": {
@@ -98,14 +93,11 @@ class SqlScan(object):
         t = json.loads(
             requests.post(url, data=json.dumps(option), headers=headers).text)
 
-
     def scan_stop(self):
         stop=requests.get(self.server + 'scan/' + self.taskid + '/stop').text
 
-
     def scan_kill(self):
         kill=requests.get(self.server + 'scan/' + self.taskid + '/kill').text
-
 
     def run(self):
         self.task_new()
@@ -128,7 +120,6 @@ class SqlScan(object):
                 break
         self.scan_data()
         self.task_delete()
-
 
 
 if __name__ == "__main__":
@@ -155,6 +146,7 @@ if __name__ == "__main__":
                 url = url.replace('/n', '')
                 s = SqlScan(server=server, target_url=url)
                 s.run()
+
         except:
             pass
 
